@@ -7,12 +7,17 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-public class SmarterWebDriverWait extends WebDriverWait {
+public class VerboseWebDriverWait extends WebDriverWait {
     WebDriver driver;
 
-    public SmarterWebDriverWait(WebDriver driver, Duration timeout) {
+    public VerboseWebDriverWait(WebDriver driver, Duration timeout) {
         super(driver, timeout);
-        this.ignoreAll(ImmutableList.of(
+        this.driver = driver; // we store to use it inside overridden timeoutException
+        // ... to take screenshot, store it, and add its path to message
+    }
+
+    public static WebDriverWait withIgnoringFlakyTestsErrors(WebDriver driver, Duration timeout) {
+        return (WebDriverWait) new VerboseWebDriverWait(driver, timeout).ignoreAll(ImmutableList.of(
                 StaleElementReferenceException.class,
                 InvalidElementStateException.class,
                 JavascriptException.class,
@@ -20,8 +25,6 @@ public class SmarterWebDriverWait extends WebDriverWait {
                 NotFoundException.class
 
         ));
-        this.driver = driver; // we store to use it inside overridden timeoutException
-        // ... to take screenshot, store it, and add its path to message
     }
 
     @Override

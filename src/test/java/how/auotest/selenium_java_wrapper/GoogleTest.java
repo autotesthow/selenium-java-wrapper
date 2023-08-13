@@ -1,6 +1,6 @@
 package how.auotest.selenium_java_wrapper;
 
-import how.autotest.selenium_java_wrapper.SmarterWebDriverWait;
+import how.autotest.selenium_java_wrapper.VerboseWebDriverWait;
 import how.autotest.selenium_java_wrapper.commands.Action;
 import how.autotest.selenium_java_wrapper.conditions.That;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -16,8 +16,6 @@ import java.time.Duration;
 import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GoogleTest {
 
@@ -37,7 +35,7 @@ public class GoogleTest {
 
         WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
-        wait_ = new SmarterWebDriverWait(driver, Duration.ofSeconds(4));
+        wait_ = VerboseWebDriverWait.withIgnoringFlakyTestsErrors(driver, Duration.ofSeconds(4));
     }
 
     @AfterEach
