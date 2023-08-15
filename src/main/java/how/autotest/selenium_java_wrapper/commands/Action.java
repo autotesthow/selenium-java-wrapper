@@ -30,7 +30,7 @@ import java.util.function.Function;
 
 public class Action {
     public static Function<WebDriver, Boolean> type(By locator, String text) {
-        return new Function<WebDriver, Boolean>() {
+        return new Function<>() {
 
             @Override
             public Boolean apply(WebDriver driver) {

@@ -30,7 +30,7 @@ import java.util.function.Function;
 
 public class That {
     public static Function<WebDriver, Boolean> countOfLocated(By locator, Integer expected) {
-        return new Function<WebDriver, Boolean>() {
+        return new Function<>() {
 
             int actual;
 
