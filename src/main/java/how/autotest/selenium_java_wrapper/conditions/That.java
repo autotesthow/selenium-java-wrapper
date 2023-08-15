@@ -36,13 +36,83 @@ public class That {
 
             @Override
             public Boolean apply(WebDriver driver) {
-                actual = driver.findElements(locator).size();
-                return actual >= expected;
+                this.actual = driver.findElements(locator).size();
+                return this.actual >= expected;
             }
 
             @Override
             public String toString() {
-                return "located " + locator + "\n expected count >= " + expected + "\nbut \n actual count = " + actual + "\n\n";
+                return "located " + locator
+                        + "\n expected count >= " + expected
+                        + "\nbut \n actual count = " + this.actual + "\n\n";
+            }
+        };
+    }
+
+    public static Function<WebDriver, Boolean> valueOfLocated(By locator, String expected) {
+        return new Function<>() {
+
+            String actual;
+
+            @Override
+            public Boolean apply(WebDriver driver) {
+                this.actual = driver.findElement(locator).getAttribute("value");
+                return this.actual.equals(expected);
+            }
+
+            @Override
+            public String toString() {
+                return "located " + locator
+                        + "\n expected value = " + expected
+                        + "\nbut \n actual value " + (this.actual == null ? "was failed to get" : "= " + this.actual) + "\n\n";
+            }
+        };
+    }
+
+    public static Function<WebDriver, Boolean> partialTextOfLocated(By locator, String expected) {
+        return new Function<>() {
+
+            String actual;
+
+            @Override
+            public Boolean apply(WebDriver driver) {
+                actual = driver.findElement(locator).getText();
+                return actual.contains(expected);
+            }
+
+            @Override
+            public String toString() {
+                var describedLocator = "located " + locator;
+                var describedExpected = "\n expected partial text = " + expected;
+                var describedActual = "\nbut \n actual text " + (
+                        this.actual == null ? "was failed to get" : "= " + this.actual
+                ) + "\n\n";
+
+                return describedLocator + describedExpected + describedActual;
+            }
+        };
+    }
+
+    public static Function<WebDriver, Boolean> titleContains(String expected) {
+        return new Function<>() {
+
+            String actual;
+
+            @Override
+            public Boolean apply(WebDriver driver) {
+                actual = driver.getTitle();
+                return actual.contains(expected);
+            }
+
+            @Override
+            public String toString() {
+                var describedEntity = "page";
+                var describedExpected = "\n expected title contains " + expected;
+                var describedActual = "\nbut \n actual title " + (
+                        this.actual == null ? "was failed to get" : "= " + this.actual
+                ) + "\n\n";
+
+                return describedEntity + describedExpected + describedActual;
             }
         };
     }

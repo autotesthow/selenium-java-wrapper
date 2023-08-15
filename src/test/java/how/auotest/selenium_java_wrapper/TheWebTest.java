@@ -40,7 +40,7 @@ import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class GoogleTest {
+public class TheWebTest {
 
     WebDriver driver;
     WebDriverWait wait_;
@@ -67,22 +67,23 @@ public class GoogleTest {
     }
 
     @Test
-    void findsSelenide() { // first examples of command and assertion that use SMARTER waiting
+    void googleFindsSelenide() { // smarter waiting for commands and asserts but "complex element location" was simplified
         driver.get("https://google.com/ncr");
-        assertThat(driver.findElement(By.cssSelector("[name=q]")).getAttribute("value")).isEqualTo("");
+        assert_(That.valueOfLocated(By.cssSelector("[name=q]"), ""));
 
-        do_(Action.type(By.cssSelector("[name=q]"), "github selenide")); // <- SMARTER
-        driver.findElement(By.cssSelector("[name=q]")).sendKeys(Keys.ENTER);
+        do_(Action.type(By.cssSelector("[name=q]"), "github selenide"));
+        do_(Action.pressEnter(By.cssSelector("[name=q]")));
+        assert_(That.countOfLocated(By.cssSelector("#rso>div"), 5));
+        assert_(That.partialTextOfLocated(By.cssSelector("#rso>div"), "selenide › selenide"));
+//        assertThat(driver.findElements(By.cssSelector("#rso>div")).get(0).getText()).contains("selenide › selenide");
 
-        assert_(That.countOfLocated(By.cssSelector("#rso>div"), 5)); // <- SMARTER
-        assertThat(driver.findElements(By.cssSelector("#rso>div")).get(0).getText()).contains("selenide › selenide");
-
-        driver.findElements(By.cssSelector("#rso>div")).get(0).findElement(By.cssSelector("h3")).click();
-        assertThat(driver.getTitle()).contains("GitHub - selenide/selenide");
+        do_(Action.click(By.cssSelector("#rso>div:nth-of-type(1) h3")));
+//        driver.findElements(By.cssSelector("#rso>div")).get(0).findElement(By.cssSelector("h3")).click();
+        assert_(That.titleContains("GitHub - selenide/selenide"));
     }
 
     @Test
-    void findsSelenide_() { // pure Selenium Version
+    void googleFindsSelenide_() { // pure Selenium Version
         driver.get("https://google.com/ncr");
         assertThat(driver.findElement(By.cssSelector("[name=q]")).getAttribute("value")).isEqualTo("");
 
@@ -95,5 +96,15 @@ public class GoogleTest {
 
         driver.findElements(By.cssSelector("#rso>div")).get(0).findElement(By.cssSelector("h3")).click();
         assertThat(driver.getTitle()).contains("GitHub - selenide/selenide");
+    }
+
+    @Test
+    void contextClickOpensContextMenu() {
+        driver.get("https://the-internet.herokuapp.com/context_menu");
+
+        do_(Action.contextClick(By.cssSelector("#hot-spot")));
+
+        assertThat(driver.switchTo().alert().getText()).isEqualTo("You selected a context menu");
+        driver.switchTo().alert().accept();
     }
 }
